@@ -53,7 +53,7 @@ pipeline {
 			steps {
 				//"docker build -t in28min/currency-exchange-devops:$env.BUILD_TAG"
 				script {
-					dockerImage = docker.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
+					dockerImage = dockerHome.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
 				}
 
 			}
@@ -62,7 +62,7 @@ pipeline {
 		stage('Push Docker Image') {
 			steps {
 				script {
-					docker.withRegistry('', 'dockerhub') {
+					dockerHome.withRegistry('', 'dockerhub') {
 						dockerImage.push();
 						dockerImage.push('latest');
 					}
