@@ -48,18 +48,19 @@ pipeline {
 
 		stage('Build Docker Image') {
 			steps {
-				//"docker build -t charlesdccti/jenkins-docker-pipeline:$env.BUILD_TAG"
+				// sh "docker build -t charlesdccti/jenkins-docker-pipeline:$env.BUILD_TAG"
 				script {
-					dockerImage = docker.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
+					dockerImage = dockerHome.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
 				}
-
+							
 			}
 		}
 
 		stage('Push Docker Image') {
 			steps {
+				// sh "docker build -t charlesdccti/jenkins-docker-pipeline:$env.BUILD_TAG"
 				script {
-					docker.withRegistry('', 'dockerhub') {
+					dockerHome.withRegistry('', 'dockerhub') {
 						dockerImage.push();
 						dockerImage.push('latest');
 					}
