@@ -51,7 +51,7 @@ pipeline {
 
 		stage('Build Docker Image') {
 			steps {
-				sh "docker build -t charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}"
+				sh "docker build -t charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG} ."
 			}
 		}
 
