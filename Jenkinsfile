@@ -9,6 +9,7 @@ pipeline {
 		dockerHome = tool 'myDocker'
 		mavenHome = tool 'myMaven'
 		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
 	}
 
 	stages {
@@ -52,6 +53,13 @@ pipeline {
 		stage('Build Docker Image') {
 			steps {
 				sh "docker build -t charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG} ."
+			}
+		}
+
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			}
 		}
 
