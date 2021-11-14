@@ -51,21 +51,13 @@ pipeline {
 
 		stage('Build Docker Image') {
 			steps {
-				script {
-					dockerImage = docker.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
-				}
-
+				sh "docker build -t charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}"
 			}
 		}
 
 		stage('Push Docker Image') {
 			steps {
-				script {
-					docker.withRegistry('', 'dockerhub') {
-						dockerImage.push();
-						dockerImage.push('latest');
-					}
-				}
+				sh "docker push charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}"		
 			}
 		}
 	} 
