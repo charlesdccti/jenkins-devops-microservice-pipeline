@@ -14,8 +14,6 @@ pipeline {
 	stages {
 		stage('Checkout') {
 			steps {
-				// sh 'mvn --version'
-				// sh 'node --version'
 				sh 'mvn --version'
 				sh 'docker version'
 				echo "Build"
@@ -25,6 +23,11 @@ pipeline {
 				echo "JOB_NAME - $env.JOB_NAME"
 				echo "BUILD_TAG - $env.BUILD_TAG"
 				echo "BUILD_URL - $env.BUILD_URL"
+			}
+		}
+		stage('Compile') {
+			steps {
+				sh "mvn clean compile"
 			}
 		}
 
@@ -40,27 +43,20 @@ pipeline {
 			}
 		}
 
-		stage('Package') {
-			steps {
-				sh "mvn package -DskipTests"
-			}
-		}
-
 		stage('Build Docker Image') {
 			steps {
-				// sh "docker build -t charlesdccti/jenkins-docker-pipeline:$env.BUILD_TAG"
+				//"docker build -t in28min/currency-exchange-devops:$env.BUILD_TAG"
 				script {
-					dockerImage = dockerHome.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
+					dockerImage = docker.build("charlesdccti/jenkins-docker-pipeline:${env.BUILD_TAG}")
 				}
-							
+
 			}
 		}
 
 		stage('Push Docker Image') {
 			steps {
-				// sh "docker build -t charlesdccti/jenkins-docker-pipeline:$env.BUILD_TAG"
 				script {
-					dockerHome.withRegistry('', 'dockerhub') {
+					docker.withRegistry('', 'dockerhub') {
 						dockerImage.push();
 						dockerImage.push('latest');
 					}
